@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from typing import Any
 
 import pandas as pd
 
@@ -27,6 +28,13 @@ class SemanticVersion:
             raise TypeError(
                 "One of the values in the semantic version string could not be parsed as an integer"
             )
+
+
+@dataclass
+class EstimateDescription:
+    name: str
+    r_type: str
+    value: Any
 
 
 def first_matching_row_val(df: pd.DataFrame, query: str, val_col: str):
@@ -77,6 +85,13 @@ class SummarisedResultSettings:
                 result_table.loc[
                     (~result_table["estimate_name"].isin(NON_VARIABLE_NAMES))
                     & (result_table["variable_name"] == "settings")
-                ]["estimate_name"]
+                ].apply(
+                    lambda x: EstimateDescription(
+                        name=x["estimate_name"],
+                        r_type=x["estimate_type"],
+                        value=x["estimate_value"],
+                    ),
+                    axis=1,
+                )
             ),
         )
