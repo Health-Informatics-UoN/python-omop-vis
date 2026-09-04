@@ -50,6 +50,7 @@ def first_matching_estimate_val(
 
 @dataclass
 class SummarisedResultSettings:
+    result_id: int
     result_type: str
     package_name: str
     package_version: SemanticVersion
@@ -57,11 +58,12 @@ class SummarisedResultSettings:
     strata: list[str] | None
     additional: list[str] | None
     min_cell_count: int
-    variables: list[str]
+    variables: list[EstimateDescription]
 
     @classmethod
     def from_table(cls, result_table: pd.DataFrame):
         return cls(
+            result_id=result_table.result_id.iloc[0],
             result_type=first_matching_estimate_val(result_table, "result_type"),
             package_name=first_matching_estimate_val(result_table, "package_name"),
             package_version=SemanticVersion.from_string(

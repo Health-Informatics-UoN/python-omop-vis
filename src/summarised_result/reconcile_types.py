@@ -1,5 +1,6 @@
 from enum import Enum
 
+
 class RType(Enum):
     CHARACTER = ("character", str)
     INT = ("int", int)

@@ -1,4 +1,4 @@
-from dataclasses import dataclass
+from typing import Self
 
 from pandas import DataFrame
 
@@ -20,3 +20,11 @@ class SummarisedResult:
             )
             for x in self.data.result_id.unique()
         ]
+
+    def reshape_estimate_values(self) -> Self:
+        self.data = reshape_estimate_values(self.data)
+        return self
+
+    def reshape_group_additional(self) -> Self:
+        self.data = reshape_group_additional(self.data)
+        return self
