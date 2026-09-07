@@ -8,7 +8,7 @@ from .analysis_interval import (
     take_date_range,
 )
 
-from ..summarised_result import (
+from summarised_result import (
     SummarisedResult,
     SummarisedResultSettings,
     reshape_estimate_values,
