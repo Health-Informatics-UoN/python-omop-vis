@@ -5,5 +5,5 @@ This library can wrangle some of the results into a tidier format, and do some p
 
 The notebooks describe the development and contain some examples.
 
-- [IncidencePrevalence](./IncidencePrevalence plots.ipynb)
+- [IncidencePrevalence]('./IncidencePrevalence plots.ipynb')
 - WIP
