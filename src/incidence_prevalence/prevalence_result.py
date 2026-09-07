@@ -18,23 +18,23 @@ from .plots import bar_i_p, scatter_i_p
 
 
 @dataclass
-class IncidenceResult:
+class PrevalenceResult:
     settings: list[SummarisedResultSettings]
-    incidence_result_id: int
+    prevalence_result_id: int
     results: pd.DataFrame
 
     @classmethod
     def from_summarised_result(cls, data: SummarisedResult):
         settings = data.make_settings()
-        incidence_result_id = next(
-            (x.result_id for x in settings if x.result_type == "incidence"), None
+        prevalence_result_id = next(
+            (x.result_id for x in settings if x.result_type == "prevalence"), None
         )
-        if incidence_result_id is None:
-            raise ValueError("There is no incidence result in this data")
+        if prevalence_result_id is None:
+            raise ValueError("There is no prevalence result in this data")
         res = reshape_estimate_values(
             reshape_group_additional(
                 data.data.loc[
-                    (data.data.result_id == incidence_result_id)
+                    (data.data.result_id == prevalence_result_id)
                     & ~(data.data.variable_name == "settings")
                 ]
             )
@@ -44,7 +44,7 @@ class IncidenceResult:
 
         return cls(
             settings=data.make_settings(),
-            incidence_result_id=incidence_result_id,
+            prevalence_result_id=prevalence_result_id,
             results=res,
         )
 
@@ -57,33 +57,26 @@ class IncidenceResult:
             df["outcome_count"], errors="coerce", downcast="unsigned"
         )
 
-        df["incidence_100000_pys"] = pd.to_numeric(
-            df["incidence_100000_pys"], errors="coerce"
+        df["prevalence"] = pd.to_numeric(df["prevalence"], errors="coerce")
+        df["prevalence_95CI_lower"] = pd.to_numeric(
+            df["prevalence_95CI_lower"], errors="coerce"
         )
-        df["incidence_100000_pys_95CI_lower"] = pd.to_numeric(
-            df["incidence_100000_pys_95CI_lower"], errors="coerce"
-        )
-        df["incidence_100000_pys_95CI_upper"] = pd.to_numeric(
-            df["incidence_100000_pys_95CI_upper"], errors="coerce"
+        df["prevalence_95CI_upper"] = pd.to_numeric(
+            df["prevalence_95CI_upper"], errors="coerce"
         )
 
-        df["person_days"] = pd.to_numeric(
-            df["person_days"], errors="coerce", downcast="unsigned"
-        )
-        df["person_years"] = pd.to_numeric(df["person_years"])
+        df["prevalence_start_date"] = pd.to_datetime(df["prevalence_start_date"])
+        df["prevalence_end_date"] = pd.to_datetime(df["prevalence_end_date"])
 
-        df["incidence_start_date"] = pd.to_datetime(df["incidence_start_date"])
-        df["incidence_end_date"] = pd.to_datetime(df["incidence_end_date"])
-
-    def plot_incidence(
+    def plot_prevalence(
         self,
-        x: str = "incidence_start_date",
-        y: str = "incidence_100000_pys",
+        x: str = "prevalence_start_date",
+        y: str = "prevalence",
         line: bool = False,
         # point: bool = True,
         # ribbon: bool = False,
-        ymin: str = "incidence_100000_pys_95CI_lower",
-        ymax: str = "incidence_100000_pys_95CI_upper",
+        ymin: str = "prevalence_95CI_lower",
+        ymax: str = "prevalence_95CI_upper",
         date_range: tuple[pd.Timestamp, pd.Timestamp] | None = None,
         axes: Axes | None = None,
     ) -> Axes:
@@ -105,9 +98,9 @@ class IncidenceResult:
             axes,
         )
 
-    def plot_incidence_population(
+    def plot_prevalence_population(
         self,
-        x: str = "incidence_start_date",
+        x: str = "prevalence_start_date",
         y: str = "denominator_count",
         date_range: tuple[pd.Timestamp, pd.Timestamp] | None = None,
         axes: Axes | None = None,
