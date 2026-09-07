@@ -2,8 +2,8 @@ from typing import Self
 
 from pandas import DataFrame
 
-from src.summarised_result.parse_settings import SummarisedResultSettings
-from src.summarised_result.reshape_tables import (
+from .parse_settings import SummarisedResultSettings
+from .reshape_tables import (
     reshape_estimate_values,
     reshape_group_additional,
 )

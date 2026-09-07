@@ -3,7 +3,7 @@ from dataclasses import dataclass
 import pandas as pd
 from matplotlib.axes import Axes
 
-from src.incidence_prevalence.analysis_interval import (
+from .analysis_interval import (
     analysis_interval_column,
     take_date_range,
 )
