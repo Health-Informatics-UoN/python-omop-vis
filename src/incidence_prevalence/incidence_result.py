@@ -1,4 +1,10 @@
 from dataclasses import dataclass
+
+import matplotlib.pyplot as plt
+import pandas as pd
+import seaborn as sns
+from matplotlib.axes import Axes
+
 from ..summarised_result import (
     SummarisedResult,
     SummarisedResultSettings,
@@ -6,16 +12,11 @@ from ..summarised_result import (
     reshape_group_additional,
 )
 
-import pandas as pd
-import seaborn as sns
-from matplotlib.axes import Axes
-import matplotlib.pyplot as plt
-
 DISPLAY_NAMES = {
     "outcome_count": "Outcome count",
     "denominator_count": "Denominator count",
     "person_years": "Person years",
-    "incidence_100000_pys": "Incidence (100,00 person-years)",
+    "incidence_100000_pys": "Incidence (100,000 person-years)",
 }
 
 
@@ -83,7 +84,11 @@ class IncidenceResult:
             case "years":
                 return pd.Series(self.results[date_column_name].apply(lambda x: x.year))
             case "month":
-                return pd.Series(self.results[date_column_name].apply(lambda x: f"{x.year}-{x.month}"))
+                return pd.Series(
+                    self.results[date_column_name].apply(
+                        lambda x: f"{x.year}-{x.month}"
+                    )
+                )
             case _:
                 return pd.Series(self.results[date_column_name])
 
@@ -96,24 +101,27 @@ class IncidenceResult:
         # ribbon: bool = False,
         ymin: str = "incidence_100000_pys_95CI_lower",
         ymax: str = "incidence_100000_pys_95CI_upper",
-        date_range: tuple[pd.Timestamp, pd.Timestamp] | None=None,
-        axes: Axes | None = None
+        date_range: tuple[pd.Timestamp, pd.Timestamp] | None = None,
+        axes: Axes | None = None,
     ) -> Axes:
         if date_range is not None:
-            plot_results = self.results.loc[(self.results[x] >= min(date_range)) & (self.results[x] <= max(date_range))]
+            plot_results = self.results.loc[
+                (self.results[x] >= min(date_range))
+                & (self.results[x] <= max(date_range))
+            ]
         else:
-            plot_results=self.results
+            plot_results = self.results
         plot_results[x] = self.analysis_interval_column(x)
         # If you leave in NaN values for the y axis, seaborn plots the bars very thin for some reason
         plot_results = plot_results.loc[~plot_results[y].isna()]
         plot = sns.scatterplot(data=plot_results, x=x, y=y, legend=False, ax=axes)
         plt.errorbar(
-                x=plot_results[x],
-                y=plot_results[y],
-                yerr=(plot_results[ymin], plot_results[ymax]),
-                fmt="o-" if line else "o"
-                )
-        plot.set(xlabel=f"Date ({self.results["analysis_interval"].iloc[0]})")
+            x=plot_results[x],
+            y=plot_results[y],
+            yerr=(plot_results[ymin], plot_results[ymax]),
+            fmt="o-" if line else "o",
+        )
+        plot.set(xlabel=f"Date ({self.results['analysis_interval'].iloc[0]})")
         if y in DISPLAY_NAMES:
             plot.set(ylabel=DISPLAY_NAMES[y])
         plot.grid(True, axis="both")
@@ -121,24 +129,25 @@ class IncidenceResult:
         plot.set_xticklabels(plot.get_xticklabels(), rotation=30, ha="right")
         return plot
 
-        
-
     def plot_incidence_population(
         self,
-        x: str="incidence_start_date",
-        y: str="denominator_count",
-        date_range: tuple[pd.Timestamp, pd.Timestamp] | None=None,
-        axes: Axes | None = None
+        x: str = "incidence_start_date",
+        y: str = "denominator_count",
+        date_range: tuple[pd.Timestamp, pd.Timestamp] | None = None,
+        axes: Axes | None = None,
     ) -> Axes:
         if date_range is not None:
-            plot_results = self.results.loc[(self.results[x] >= min(date_range)) & (self.results[x] <= max(date_range))]
+            plot_results = self.results.loc[
+                (self.results[x] >= min(date_range))
+                & (self.results[x] <= max(date_range))
+            ]
         else:
-            plot_results=self.results
+            plot_results = self.results
         plot_results[x] = self.analysis_interval_column(x)
         # If you leave in NaN values for the y axis, seaborn plots the bars very thin for some reason
         plot_results = plot_results.loc[~plot_results[y].isna()]
         plot = sns.barplot(data=plot_results, x=x, y=y, legend=False, ax=axes)
-        plot.set(xlabel=f"Date ({self.results["analysis_interval"].iloc[0]})")
+        plot.set(xlabel=f"Date ({self.results['analysis_interval'].iloc[0]})")
         if y in DISPLAY_NAMES:
             plot.set(ylabel=DISPLAY_NAMES[y])
         plot.grid(True, axis="both")
