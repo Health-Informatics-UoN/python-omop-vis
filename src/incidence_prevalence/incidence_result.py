@@ -91,9 +91,6 @@ class IncidenceResult:
             plot_results = take_date_range(self.results, x, date_range)
         else:
             plot_results = self.results.copy()
-        plot_results["x"] = analysis_interval_column(
-            plot_results[x], plot_results["analysis_interval"].iloc[0]
-        )
         if "analysis_interval" in plot_results.columns:
             analysis_interval_name = plot_results["analysis_interval"].iloc[0]
             plot_results["x"] = analysis_interval_column(
