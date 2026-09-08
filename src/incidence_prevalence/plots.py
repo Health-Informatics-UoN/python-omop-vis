@@ -42,6 +42,8 @@ def scatter_i_p(
 
     if analysis_interval is not None:
         plot.set(xlabel=f"Date ({analysis_interval})")
+    else:
+        plot.set(xlabel="Date")
     if y in DISPLAY_NAMES:
         plot.set(ylabel=DISPLAY_NAMES[y])
     plot.grid(True, axis="both")
@@ -62,6 +64,8 @@ def bar_i_p(
     plot = sns.barplot(data=plot_results, x=x, y=y, legend=False, ax=axes)
     if analysis_interval is not None:
         plot.set(xlabel=f"Date ({analysis_interval})")
+    else:
+        plot.set(xlabel="Date")
     if y in DISPLAY_NAMES:
         plot.set(ylabel=DISPLAY_NAMES[y])
     plot.grid(True, axis="both")
