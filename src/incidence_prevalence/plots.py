@@ -21,7 +21,7 @@ def scatter_i_p(
     # ribbon: bool = False,
     ymin: str,
     ymax: str,
-    analysis_interval: str,
+    analysis_interval: str | None,
     axes: Axes | None,
 ) -> Axes:
     plot = sns.scatterplot(data=plot_results, x=x, y=y, legend=False, ax=axes)
@@ -31,7 +31,8 @@ def scatter_i_p(
         yerr=(plot_results[ymin], plot_results[ymax]),
         fmt="o-" if line else "o",
     )
-    plot.set(xlabel=f"Date ({analysis_interval})")
+    if analysis_interval is not None:
+        plot.set(xlabel=f"Date ({analysis_interval})")
     if y in DISPLAY_NAMES:
         plot.set(ylabel=DISPLAY_NAMES[y])
     plot.grid(True, axis="both")
@@ -44,13 +45,14 @@ def bar_i_p(
     plot_results: pd.DataFrame,
     x: str,
     y: str,
-    analysis_interval,
+    analysis_interval: str | None,
     axes: Axes | None = None,
 ) -> Axes:
     # If you leave in NaN values for the y axis, seaborn plots the bars very thin for some reason
     plot_results = plot_results.loc[~plot_results[y].isna()]
     plot = sns.barplot(data=plot_results, x=x, y=y, legend=False, ax=axes)
-    plot.set(xlabel=f"Date ({analysis_interval})")
+    if analysis_interval is not None:
+        plot.set(xlabel=f"Date ({analysis_interval})")
     if y in DISPLAY_NAMES:
         plot.set(ylabel=DISPLAY_NAMES[y])
     plot.grid(True, axis="both")

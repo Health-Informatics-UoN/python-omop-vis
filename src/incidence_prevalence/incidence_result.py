@@ -94,6 +94,14 @@ class IncidenceResult:
         plot_results["x"] = analysis_interval_column(
             plot_results[x], plot_results["analysis_interval"].iloc[0]
         )
+        if "analysis_interval" in plot_results.columns:
+            analysis_interval_name = plot_results["analysis_interval"].iloc[0]
+            plot_results["x"] = analysis_interval_column(
+                plot_results[x], analysis_interval_name
+            )
+        else:
+            plot_results["x"] = plot_results[x]
+            analysis_interval_name = None
         return scatter_i_p(
             plot_results,
             "x",
@@ -101,7 +109,7 @@ class IncidenceResult:
             line,
             ymin,
             ymax,
-            plot_results["analysis_interval"].iloc[0],
+            analysis_interval_name,
             axes,
         )
 
@@ -116,9 +124,14 @@ class IncidenceResult:
             plot_results = take_date_range(self.results, x, date_range)
         else:
             plot_results = self.results.copy()
-        plot_results["x"] = analysis_interval_column(
-            plot_results[x], plot_results["analysis_interval"].iloc[0]
-        )
+        if "analysis_interval" in plot_results.columns:
+            analysis_interval_name = plot_results["analysis_interval"].iloc[0]
+            plot_results["x"] = analysis_interval_column(
+                plot_results[x], analysis_interval_name
+            )
+        else:
+            plot_results["x"] = plot_results[x]
+            analysis_interval_name = None
         return bar_i_p(
-            plot_results, "x", y, plot_results["analysis_interval"].iloc[0], axes
+            plot_results, "x", y, analysis_interval_name, axes
         )
