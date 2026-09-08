@@ -25,12 +25,21 @@ def scatter_i_p(
     axes: Axes | None,
 ) -> Axes:
     plot = sns.scatterplot(data=plot_results, x=x, y=y, legend=False, ax=axes)
-    plt.errorbar(
-        x=plot_results[x],
-        y=plot_results[y],
-        yerr=(plot_results[ymin], plot_results[ymax]),
-        fmt="o-" if line else "o",
-    )
+    if axes is None:
+        plt.errorbar(
+            x=plot_results[x],
+            y=plot_results[y],
+            yerr=(plot_results[ymin], plot_results[ymax]),
+            fmt="o-" if line else "o",
+        )
+    else:
+        axes.errorbar(
+            x=plot_results[x],
+            y=plot_results[y],
+            yerr=(plot_results[ymin], plot_results[ymax]),
+            fmt="o-" if line else "o",
+        )
+
     if analysis_interval is not None:
         plot.set(xlabel=f"Date ({analysis_interval})")
     if y in DISPLAY_NAMES:
