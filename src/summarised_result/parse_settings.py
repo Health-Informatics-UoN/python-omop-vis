@@ -54,7 +54,7 @@ class SummarisedResultSettings:
     result_type: str
     package_name: str
     package_version: SemanticVersion
-    groups: list[str]
+    groups: list[str] | None
     strata: list[str] | None
     additional: list[str] | None
     min_cell_count: int
@@ -62,6 +62,22 @@ class SummarisedResultSettings:
 
     @classmethod
     def from_table(cls, result_table: pd.DataFrame):
+        try:
+            groups=[
+                x.strip()
+                for x in first_matching_estimate_val(result_table, "group").split("&&&")
+            ]
+        except IndexError:
+            groups=None
+        try:
+            additional=[
+                x.strip()
+                for x in first_matching_estimate_val(result_table, "additional").split(
+                    "&&&"
+                )
+            ]
+        except IndexError:
+            additional=None
         return cls(
             result_id=result_table.result_id.iloc[0],
             result_type=first_matching_estimate_val(result_table, "result_type"),
@@ -69,17 +85,9 @@ class SummarisedResultSettings:
             package_version=SemanticVersion.from_string(
                 first_matching_estimate_val(result_table, "package_version")
             ),
-            groups=[
-                x.strip()
-                for x in first_matching_estimate_val(result_table, "group").split("&&&")
-            ],
+            groups=groups,
             strata=None,
-            additional=[
-                x.strip()
-                for x in first_matching_estimate_val(result_table, "additional").split(
-                    "&&&"
-                )
-            ],
+            additional=additional,
             min_cell_count=int(
                 first_matching_estimate_val(result_table, "min_cell_count")
             ),
