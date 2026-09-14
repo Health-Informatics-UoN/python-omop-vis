@@ -6,6 +6,8 @@ readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
     "pandas>=3.0.5",
+    "partialstats",
+    "scipy>=1.18.1",
     "seaborn>=0.13.2",
 ]
 
@@ -13,3 +15,6 @@ dependencies = [
 dev = [
     "jupyter>=1.1.1",
 ]
+
+[tool.uv.sources]
+partialstats = { git = "https://github.com/Health-Informatics-UoN/partialstats" }
