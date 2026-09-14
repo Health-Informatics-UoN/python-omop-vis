@@ -91,6 +91,6 @@ def test_inc_rate_ci_correct():
         for ev, pt in zip(outcome_counts, person_years)
     ] == incidence_100000_pys_95CI_lower
     assert [
-        round(float(inc_rate_ci_exact(0.975, ev+1, pt)), 3)
+        round(float(inc_rate_ci_exact(0.975, ev + 1, pt)), 3)
         for ev, pt in zip(outcome_counts, person_years)
     ] == incidence_100000_pys_95CI_upper

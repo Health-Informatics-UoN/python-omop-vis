@@ -129,6 +129,4 @@ class IncidenceResult:
         else:
             plot_results["x"] = plot_results[x]
             analysis_interval_name = None
-        return bar_i_p(
-            plot_results, "x", y, analysis_interval_name, axes
-        )
+        return bar_i_p(plot_results, "x", y, analysis_interval_name, axes)

@@ -63,21 +63,21 @@ class SummarisedResultSettings:
     @classmethod
     def from_table(cls, result_table: pd.DataFrame):
         try:
-            groups=[
+            groups = [
                 x.strip()
                 for x in first_matching_estimate_val(result_table, "group").split("&&&")
             ]
         except IndexError:
-            groups=None
+            groups = None
         try:
-            additional=[
+            additional = [
                 x.strip()
                 for x in first_matching_estimate_val(result_table, "additional").split(
                     "&&&"
                 )
             ]
         except IndexError:
-            additional=None
+            additional = None
         return cls(
             result_id=result_table.result_id.iloc[0],
             result_type=first_matching_estimate_val(result_table, "result_type"),
