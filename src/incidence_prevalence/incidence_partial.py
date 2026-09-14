@@ -3,7 +3,7 @@ from partialstats import Partial
 import pandas as pd
 from scipy import stats
 
-from add_variable_columns import add_var_columns
+from .add_variable_columns import add_var_columns
 
 def inc_rate_ci_exact(q, ev, pt) -> float:
     """
