@@ -53,7 +53,7 @@ class IncidencePartial(Partial):
         for colname in derived_columns:
             if colname in df.columns:
                 df.drop(colname, axis=1, inplace=True)
-        return self.df
+        return df
 
     def __add__(self, other: Self) -> Self:
         var_columns = [
